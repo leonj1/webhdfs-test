@@ -49,14 +49,6 @@ func (f *FileSystem) mkdirsHandler(w http.ResponseWriter, r *http.Request) {
 		respondWithJSON(w, 404, response)
 		return
 	}
-	//payload := &QueryResponse{}
-	//err = json.Unmarshal(body, &payload)
-	//if err != nil {
-	//	response := &ErrorResponse{ErrorMessage: "Message not found2"}
-	//	respondWithJSON(w, 404, response)
-	//	return
-	//}
-	//response := "hi"
 	respondWithJSON(w, 201, path)
 }
 
