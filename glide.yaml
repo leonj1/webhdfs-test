@@ -1,2 +1,11 @@
-package: .
-import: []
+package: github.com/leonj1/webhdfs-test
+import:
+- package: github.com/gorilla/mux
+- package: github.com/orcaman/concurrent-map
+- package: github.com/sirupsen/logrus
+  version: 33a34430d1c3dc71777fdd677864928e5b5812bc
+- package: github.com/Sirupsen/logrus
+  repo: git@github.com:/sirupsen/logrus
+  vcs: git
+  version: master
+- package: gopkg.in/natefinch/lumberjack.v2

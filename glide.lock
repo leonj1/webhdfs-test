@@ -1,5 +1,5 @@
-hash: 3441bf6ff6d443d7e65fcdfc4f1d1b67e506cee012ed3b4901bbe2aab9890aa9
-updated: 2017-08-29T01:32:37.781203977-04:00
+hash: fa45330ba4b1818799919f65ef85a2004a83285ceb6a17dd40fe70ca9624aab5
+updated: 2017-09-20T22:21:34.273753359-04:00
 imports:
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
@@ -7,6 +7,16 @@ imports:
   version: ac112f7d75a0714af1bd86ab17749b31f7809640
 - name: github.com/orcaman/concurrent-map
   version: 2ae17bc4c860c83513ee50feb9746f3e50d7515d
+- name: github.com/sirupsen/logrus
+  version: 33a34430d1c3dc71777fdd677864928e5b5812bc
+- name: github.com/Sirupsen/logrus
+  version: 89742aefa4b206dcf400792f3bd35b542998eb3b
+  repo: git@github.com:/sirupsen/logrus
+  vcs: git
+- name: golang.org/x/sys
+  version: b6e1ae21643682ce023deb8d152024597b0e9bb4
+  subpackages:
+  - unix
 - name: gopkg.in/natefinch/lumberjack.v2
   version: a96e63847dc3c67d17befa69c303767e2f84e54f
 testImports: []
