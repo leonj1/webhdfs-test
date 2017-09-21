@@ -95,15 +95,6 @@ type MyConcurrentMap struct {
 	}
 */
 
-type NodeAttr struct {
-}
-
-type FsNode struct {
-	Name       string
-	Type       string
-	Attributes NodeAttr
-}
-
 // GET
 func (m *MyConcurrentMap) secureHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
