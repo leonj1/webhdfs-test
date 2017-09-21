@@ -1,0 +1,36 @@
+/**
+	Listing a directory /foo
+	curl -i "http://host:port/webhdfs/v1/foo/?op=LISTSTATUS"
+ */
+
+/**
+	Renaming the file /foo/bar to /foo/bar2
+	curl -i -X PUT "http://host:port/webhdfs/v1/foo/bar?op=RENAME&destination=/foo/bar2"
+ */
+
+/**
+	Get Directory Status
+	curl -i "http://localhost:50070/webhdfs/v1/tmp?user.name=istvan&op=GETFILESTATUS"
+	HTTP/1.1 200 OK
+	Content-Type: application/json
+	Expires: Thu, 01-Jan-1970 00:00:00 GMT
+	Set-Cookie: hadoop.auth="u=istvan&p=istvan&t=simple&e=1370210454798&s=zKjRgOMQ1Q3NB1kXqHJ6GPa6TlY=";Path=/
+	Transfer-Encoding: chunked
+	Server: Jetty(6.1.26)
+
+	{
+	  "FileStatus":
+	  {
+		"accessTime"      : 1322596581499,
+		"blockSize"       : 67108864,
+		"group"           : "supergroup",
+		"length"          : 22,
+		"modificationTime": 1322596581499,
+		"owner"           : "szetszwo",
+		"pathSuffix"      : "",
+		"permission"      : "644",
+		"replication"     : 3,
+		"type"            : "FILE"
+	  }
+	}
+*/

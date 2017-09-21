@@ -36,5 +36,5 @@ func (f *File) GetAttributes() (NodeAttr, error) {
 	return NodeAttr{}, nil
 }
 
-// verify structs implement Node interface
+// verify struct implements Node interface
 var _ Node = (*File)(nil)

@@ -10,6 +10,14 @@ type Folder struct {
 	Folders      map[string]*Folder
 }
 
+func NewRootFolder() *Folder {
+	return &Folder{
+		Name: "",
+		Type: "FOLDER",
+		Attributes: NodeAttr{},
+	}
+}
+
 // TODO Update NodeAttributes
 func (f *Folder) AddFile(name string, attr NodeAttr) error {
 	if _, ok := f.Folders[name]; !ok {
