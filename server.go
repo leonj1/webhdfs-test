@@ -6,25 +6,181 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"io/ioutil"
 	"net/http"
 	"os"
+	"io/ioutil"
+	"errors"
 )
-
-type PostResponse struct {
-	Digest string `json:"digest"`
-}
-
-type QueryResponse struct {
-	Message string `json:"message"`
-}
-
-type ErrorResponse struct {
-	ErrorMessage string `json:"err_msg"`
-}
 
 type FileSystem struct {
 	Root *Folder
+}
+
+type Folder struct {
+	Name       string
+	Type       string
+	Attributes NodeAttr
+	Files      map[string]*File
+	Folders      map[string]*Folder
+}
+
+func NewRootFolder() *Folder {
+	return &Folder{
+		Name: "",
+		Type: "FOLDER",
+		Attributes: NodeAttr{},
+	}
+}
+
+// TODO Update NodeAttributes
+func (f *Folder) AddFile(name string, attr NodeAttr) error {
+	if _, ok := f.Folders[name]; !ok {
+		if _, ok := f.Files[name]; !ok {
+			f.Files[name] = &File{
+				Name:       name,
+				Type:       "FILE",
+				Parent:     f,
+				Attributes: NodeAttr{},
+			}
+			return nil
+		}
+	}
+	return errors.New("already exists")
+}
+
+// TODO Update NodeAttributes
+func (f *Folder) AddFolder(name string, attr NodeAttr) error {
+	if _, ok := f.Files[name]; !ok {
+		if _, ok := f.Folders[name]; !ok {
+			f.Folders[name] = &Folder{
+				Name:       name,
+				Type:       "FOLDER",
+				Attributes: NodeAttr{},
+			}
+			return nil
+		}
+	}
+	return errors.New("already exists")
+}
+
+func (f *Folder) Delete(name string) error {
+	// TODO Fix this since it needs to delete down the "tree"
+	if _, ok := f.Folders[name]; ok {
+		delete(f.Folders, name)
+		return nil
+	}
+	if _, ok := f.Files[name]; ok {
+		delete(f.Files, name)
+		return nil
+	}
+	return errors.New("not found")
+}
+
+// implements Node interface
+func (f *Folder) GetName() string {
+	return f.Name
+}
+
+// implements Node interface
+func (f *Folder) SetName(name string) {
+
+}
+
+// implements Node interface
+func (f *Folder) GetType() string {
+	return f.Type
+}
+
+// implements Node interface
+func (f *Folder) GetAttributes() (NodeAttr, error) {
+	return NodeAttr{}, nil
+}
+
+// verify struct implements Node interface
+var _ Node = (*Folder)(nil)
+
+type File struct {
+	Name       string
+	Type       string
+	Parent     *Folder
+	Attributes NodeAttr
+	Bytes      []byte
+}
+
+func (f *File) GetBytes() []byte {
+	return f.Bytes
+}
+
+func (f *File) SetBytes(bytes []byte) {
+	f.Bytes = bytes
+}
+
+// implements Node interface
+func (f *File) GetName() string {
+	return f.Name
+}
+
+// implements Node interface
+func (f *File) SetName(name string) {
+	f.Name = name
+}
+
+// implements Node interface
+func (f *File) GetType() string {
+	return f.Type
+}
+
+// implements Node interface
+func (f *File) GetAttributes() (NodeAttr, error) {
+	return NodeAttr{}, nil
+}
+
+// verify struct implements Node interface
+var _ Node = (*File)(nil)
+
+/**
+{
+  "FileStatus":
+  {
+	"accessTime"      : 1322596581499,
+	"blockSize"       : 67108864,
+	"group"           : "supergroup",
+	"length"          : 22,
+	"modificationTime": 1322596581499,
+	"owner"           : "szetszwo",
+	"pathSuffix"      : "",
+	"permission"      : "644",
+	"replication"     : 3,
+	"type"            : "FILE"
+  }
+}
+*/
+type NodeAttr struct {
+	AccessTime       int64  `json:"accessTime"`
+	BlockSize        int64  `json:"blockSize"`
+	Group            string `json:"group"`
+	Length           int32  `json:"length"`
+	ModificationTime int64  `json:"modificationTime"`
+	Owner            string `json:"owner"`
+	PathSuffix       string `json:"pathSuffix"`
+	Permission       string `json:"permission"`
+	Replication      int32  `json:"blockSize"`
+	Type             string `json:"type"`
+}
+
+func (n *NodeAttr) UpdateModificationTime(modTime int64) {
+	n.ModificationTime = modTime
+}
+
+func (n *NodeAttr) UpdateAccessTime(accessTime int64) {
+	n.AccessTime = accessTime
+}
+
+type Node interface {
+	GetName() string
+	SetName(string)
+	GetType() string
+	GetAttributes() (NodeAttr, error)
 }
 
 /**
@@ -50,6 +206,18 @@ func (f *FileSystem) mkdirsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	respondWithJSON(w, 201, path)
+}
+
+type PostResponse struct {
+	Digest string `json:"digest"`
+}
+
+type QueryResponse struct {
+	Message string `json:"message"`
+}
+
+type ErrorResponse struct {
+	ErrorMessage string `json:"err_msg"`
 }
 
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
